@@ -17,7 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+admin.site.site_header = "HilaryD"
+admin.site.site_title = "ADMIN-HIlary"
+admin.site.index_title = "ADMIN-HIlary"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
+    path('', include('core.urls'))
 ]
