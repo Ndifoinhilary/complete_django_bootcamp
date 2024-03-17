@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from pprint import pprint
+from store.filters import ProductFilter
 from store.models import Collection, OrderItem, Product, Review
 from store.serializers import CollectionSerializer, ProductSerializer, ReviewSerializer 
 
@@ -16,10 +18,20 @@ from store.serializers import CollectionSerializer, ProductSerializer, ReviewSer
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+# generic filtering methods
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
 
     def  get_context_data(self, **kwargs):
         context = {'request': self.request}
         return context
+    # performing the filtering handdy 
+    # def get_queryset(self):
+    #     queryset  = Product.objects.all()
+    #     collection_id = self.request.query_params.get('collection_id')
+    #     if collection_id is not None:
+    #         queryset =  queryset.filter(collection_id=collection_id)
+    #     return queryset
     
       
     def destroy(self, request, *args, **kwargs):
@@ -93,6 +105,6 @@ class ReviewViewSet(ModelViewSet):
 
 # read the id of the product and use this method below to pass it to the serializer 
     def get_serializer_context(self):
-        pprint(self.kwargs)
+      
         return {'product_id': self.kwargs['product_pk']}
 
