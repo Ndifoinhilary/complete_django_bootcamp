@@ -1,4 +1,4 @@
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
@@ -6,6 +6,7 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Collection, OrderItem, Product, Review
+from store.pagination import DefualPagination
 from store.serializers import CollectionSerializer, ProductSerializer, ReviewSerializer 
 from pprint import pprint
 
@@ -17,9 +18,11 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 # generic filtering methods
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
+    pagination_class = DefualPagination
     search_fields = ['title', 'description']
+    ordering_fields = ['price', 'last_update']
 
     def  get_context_data(self, **kwargs):
         context = {'request': self.request}
