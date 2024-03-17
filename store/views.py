@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
-
-from store.models import Collection, OrderItem, Product
-from store.serializers import CollectionSerializer, ProductSerializer 
+from pprint import pprint
+from store.models import Collection, OrderItem, Product, Review
+from store.serializers import CollectionSerializer, ProductSerializer, ReviewSerializer 
 
 
 
@@ -82,4 +82,17 @@ class CollectionDetailsView(RetrieveUpdateDestroyAPIView):
         return super().destroy(request, *args, **kwargs)
 
 
+
+# creating the reivew view for a product
+    
+class ReviewViewSet(ModelViewSet):
+    serializer_class = ReviewSerializer
+# getting all the reviews for a particular product 
+    def get_queryset(self):
+        return Review.objects.filter(product_id = self.kwargs['product_pk'])
+
+# read the id of the product and use this method below to pass it to the serializer 
+    def get_serializer_context(self):
+        pprint(self.kwargs)
+        return {'product_id': self.kwargs['product_pk']}
 

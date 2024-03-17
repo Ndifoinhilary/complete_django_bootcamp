@@ -127,3 +127,17 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.product.title  
+
+
+
+class Review(models.Model):
+    name = models.CharField(max_length = 150)
+    description = models.TextField()
+    date = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name = 'reviews')
+    
+    def __str__(self):
+        return  self.name
+    
+    

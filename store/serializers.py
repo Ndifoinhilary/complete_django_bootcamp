@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from decimal import Decimal
-from store.models import Collection, Product
+from store.models import Collection, Product, Review
 
 
 
@@ -30,3 +30,19 @@ class CollectionSerializer(serializers.ModelSerializer):
 
     def product_count(self, collection:Collection):
         return collection.products.count()
+
+
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+
+        fields = ['id', 'name', 'description']
+
+
+    def create(self, validated_data):
+        # getting it from the views 
+        product_id = self.context['product_id']
+       
+        return  Review.objects.create(product_id=product_id, **validated_data)
