@@ -1,15 +1,13 @@
-from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import api_view
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
-from pprint import pprint
+from django_filters.rest_framework import DjangoFilterBackend
 from store.filters import ProductFilter
 from store.models import Collection, OrderItem, Product, Review
 from store.serializers import CollectionSerializer, ProductSerializer, ReviewSerializer 
+from pprint import pprint
 
 
 
@@ -19,8 +17,9 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 # generic filtering methods
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = ProductFilter
+    search_fields = ['title', 'description']
 
     def  get_context_data(self, **kwargs):
         context = {'request': self.request}
